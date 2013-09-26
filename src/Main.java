@@ -1,16 +1,33 @@
-import javax.swing.*;
+import java.io.File;
+import java.util.Scanner;
 
 /**
- * Created with IntelliJ IDEA.
- * User: trevorhodde
+ * User: trevor hodde
  * Date: 9/25/13
  * Time: 11:00 PM
- * To change this template use File | Settings | File Templates.
  */
 public class Main {
     public static void main (String[] args) {
-        String generate = JOptionPane.showInputDialog(null, "Would you like to regenerate the datasets? <y/n>");
+        final File MY_PAGE_FILE = new File("my_page.csv");
+        final File FRIEND_FILE = new File("friend_page.csv");
+        final File ACCESS_LOG_FILE = new File("access_log.csv");
 
+        Scanner sc = new Scanner(System.in);
+        String generate = "";
+
+        // If any of the files do not exist, we need to generate them all
+        if (!MY_PAGE_FILE.exists() || !FRIEND_FILE.exists() || !ACCESS_LOG_FILE.exists()) {
+            System.out.println("One or more datasets do not exist. Creating them...");
+            generate = "y";
+        }
+        else {
+            // If the datasets already exist, ask the user if they would like to regenerate them since it
+            // takes so long to create new data sets each time
+            System.out.println("Datasets already exist. Would you like to regenerate them? <y/n> ");
+            generate = sc.nextLine();
+        }
+
+        // Run the data set generator ** WARNING: This takes at least 10 to 20 minutes to run **
         if (generate.equalsIgnoreCase("y") || generate.equalsIgnoreCase("yes") || generate.equals("") || generate.equals(null)) {
             DataSetGenerator dsg = new DataSetGenerator();
             dsg.myPageGenerator();
