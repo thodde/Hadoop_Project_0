@@ -37,13 +37,33 @@ public class DataSetGenerator {
         }
     }
 
+    // TODO: Struct or enum for unique hobbies
+
+    // A better way to store Strings for Nationalities later on
+    public enum Nationality {
+        German("German"), French("French"), Chinese("Chinese"), American("American"), Indian("Indian"),
+        Italian("Italian"), English("English"), Japanese("Japanese");
+        private String value;
+
+        Nationality (String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     public void myPageGenerator() {
         int currentID;
         String currentName;
         String currentNationality;
         int currentCountryCode;
         String currentHobby;
+
+        Nationality n;
         Random r = new Random();
+        int randomInt;
         File f = new File(MY_PAGE_FILE);
 
         // Remove the MyPage file if it already exists
@@ -58,9 +78,50 @@ public class DataSetGenerator {
         for(int i = 1; i <= MY_PAGE_RECORDS; i++) {
             currentID = i;
             currentName = generateRandomString(r.nextInt(10) + 10);
-            currentNationality = generateRandomString(r.nextInt(10) + 10);
-            currentCountryCode = r.nextInt(10) + 1;
             currentHobby = generateRandomString(r.nextInt(10) + 10);
+
+            //TODO: Stick giant case statements in a method to shorten these methods...
+
+            // Generate random descriptions using the enum above
+            randomInt = r.nextInt(5) + 1;
+            switch (randomInt) {
+                case 1:
+                    currentNationality = Nationality.German.getValue();
+                    currentCountryCode = 1;
+                    break;
+                case 2:
+                    currentNationality = Nationality.French.getValue();
+                    currentCountryCode = 2;
+                    break;
+                case 3:
+                    currentNationality = Nationality.Chinese.toString();
+                    currentCountryCode = 3;
+                    break;
+                case 4:
+                    currentNationality = Nationality.American.toString();
+                    currentCountryCode = 4;
+                    break;
+                case 5:
+                    currentNationality = Nationality.Indian.toString();
+                    currentCountryCode = 5;
+                    break;
+                case 6:
+                    currentNationality = Nationality.Italian.toString();
+                    currentCountryCode = 6;
+                    break;
+                case 7:
+                    currentNationality = Nationality.English.toString();
+                    currentCountryCode = 7;
+                    break;
+                case 8:
+                    currentNationality = Nationality.Japanese.toString();
+                    currentCountryCode = 8;
+                    break;
+                default:
+                    currentNationality = Nationality.German.toString();
+                    currentCountryCode = 1;
+                    break;
+            }
 
             try {
                 // Append the new data to the file
