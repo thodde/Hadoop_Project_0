@@ -49,7 +49,7 @@ public class TrevorTasks {
         }
     }
 
-    public void doTaskB(File inputFile) {
+    public void doTaskB(File inputFile) throws IOException, InterruptedException {
         Configuration conf = new Configuration();
         Job job = new Job(conf, "socialNetwork");
         job.setJarByClass(TrevorTasks.class);
@@ -63,7 +63,7 @@ public class TrevorTasks {
 
         job.setInputFormatClass(KeyValueTextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        FileInputFormat.addInputPath(job, new Path(inputFile));
+        FileInputFormat.addInputPath(job, new Path(inputFile.toString()));
         FileOutputFormat.setOutputPath(job, new Path("."));
         boolean result = job.waitForCompletion(true);
         System.exit(result ? 0 : 1);

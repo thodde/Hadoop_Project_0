@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -36,6 +37,15 @@ public class Main {
         }
 
         TrevorTasks t1 = new TrevorTasks();
-        t1.doTaskB(MY_PAGE_FILE);
+
+        try {
+            t1.doTaskB(MY_PAGE_FILE);
+        }
+        catch(IOException e) {
+            System.out.println(e);
+        }
+        catch(InterruptedException e) {
+            System.out.println(e);
+        }
     }
 }
