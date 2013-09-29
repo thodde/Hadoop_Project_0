@@ -83,43 +83,34 @@ public class DataSetGenerator {
             //TODO: Stick giant case statements in a method to shorten these methods...
 
             // Generate random descriptions using the enum above
-            randomInt = r.nextInt(5) + 1;
-            switch (randomInt) {
+            currentCountryCode = r.nextInt(8) + 1;
+            switch (currentCountryCode) {
                 case 1:
                     currentNationality = Nationality.German.getValue();
-                    currentCountryCode = 1;
                     break;
                 case 2:
                     currentNationality = Nationality.French.getValue();
-                    currentCountryCode = 2;
                     break;
                 case 3:
                     currentNationality = Nationality.Chinese.toString();
-                    currentCountryCode = 3;
                     break;
                 case 4:
                     currentNationality = Nationality.American.toString();
-                    currentCountryCode = 4;
                     break;
                 case 5:
                     currentNationality = Nationality.Indian.toString();
-                    currentCountryCode = 5;
                     break;
                 case 6:
                     currentNationality = Nationality.Italian.toString();
-                    currentCountryCode = 6;
                     break;
                 case 7:
                     currentNationality = Nationality.English.toString();
-                    currentCountryCode = 7;
                     break;
                 case 8:
                     currentNationality = Nationality.Japanese.toString();
-                    currentCountryCode = 8;
                     break;
                 default:
                     currentNationality = Nationality.German.toString();
-                    currentCountryCode = 1;
                     break;
             }
 
@@ -208,7 +199,7 @@ public class DataSetGenerator {
         File f = new File(ACCESS_LOG_FILE);
 
         if(f.exists()) {
-            System.out.println("ACCESS LOG dataset already exists! Deleting...");
+            System.out.println("AccessLog dataset already exists! Deleting...");
             f.delete();
         }
 
