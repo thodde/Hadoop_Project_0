@@ -4,6 +4,7 @@
  * Time: 2:44 PM
  */
 import java.util.*;
+import java.io.IOException;
 
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.fs.Path;
@@ -14,7 +15,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class TrevorTasks {
-    public static class Map extends Mapper<IntWritable, Text, Text, IntWritable, Text> {
+    public static class Map extends Mapper<Text, Text, Text, Text> {
         private Text word = new Text();
 
         public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
@@ -26,7 +27,7 @@ public class TrevorTasks {
         }
     }
 
-    public static class Reduce extends Reducer<IntWritable, Text, Text, IntWritable, Text> {
+    public static class Reduce extends Reducer<Text, Text, Text, Text> {
          private Text result = new Text();
 
         @Override
@@ -43,23 +44,22 @@ public class TrevorTasks {
     }
 
     public void doTaskB() {
-        JobConf conf = new JobConf(TrevorTasks.class);
-        conf.setJobName("socialNetwork");
+        Configuration conf = new Configuration();
+        Job job = new Job(conf, "socialNetwork");
+        job.setJarByClass(TrevorTasks.class);
+        job.setMapperClass(Map.class);
+        job.setReducerClass(Reduce.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
 
-        conf.setOutputKeyClass(Text.class);
-        conf.setOutputValueClass(IntWritable.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(Text.class);
 
-        conf.setMapperClass(Map.class);
-        conf.setCombinerClass(Reduce.class);
-        conf.setReducerClass(Reduce.class);
-        conf.setInputFormat(TextInputFormat.class);
-        conf.setOutputFormat(TextOutputFormat.class);
-
-        FileInputFormat.setInputPaths(conf, new Path(args[0]));
-        FileOutputFormat.setOutputPath(conf, new Path(args[1]));
-        JobClient.runJob(conf);
-
-        //boolean result = job.waitForCompletion(true);
-        //System.exit(result ? 0 : 1);
+        job.setInputFormatClass(KeyValueTextInputFormat.class);
+        job.setOutputFormatClass(TextOutputFormat.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        boolean result = job.waitForCompletion(true);
+        System.exit(result ? 0 : 1);
     }
 }
