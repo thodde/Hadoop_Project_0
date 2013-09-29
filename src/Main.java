@@ -36,6 +36,6 @@ public class Main {
         }
 
         TrevorTasks t1 = new TrevorTasks();
-        t1.doTaskB();
+        t1.doTaskB(MY_PAGE_FILE);
     }
 }
