@@ -34,5 +34,8 @@ public class Main {
             dsg.friendsGenerator();
             dsg.accessLogGenerator();
         }
+
+        TrevorTasks t1 = new TrevorTasks();
+        t1.doTaskB();
     }
 }
