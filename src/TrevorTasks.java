@@ -49,7 +49,7 @@ public class TrevorTasks {
         }
     }
 
-    public void doTaskB(File inputFile) throws IOException, InterruptedException {
+    public void doTaskB(File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
         Configuration conf = new Configuration();
         Job job = new Job(conf, "socialNetwork");
         job.setJarByClass(TrevorTasks.class);
