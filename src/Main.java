@@ -35,7 +35,6 @@ public class Main {
             dsg.accessLogGenerator();
         }
 
-        /*
         TrevorTasks t1 = new TrevorTasks();
 
         try {
@@ -44,6 +43,5 @@ public class Main {
         catch(Exception e) {
             System.out.println(e);
         }
-        */
     }
 }

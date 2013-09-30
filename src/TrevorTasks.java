@@ -7,7 +7,9 @@ import java.util.*;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.hadoop.conf.*;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
@@ -50,35 +52,47 @@ public class TrevorTasks {
     }
 
     public void doTaskB(File inputFile) throws Exception {
-        String uri = "/home/ubuntu/Workspace/hadoop-1.1.0/hadoop-data/" + inputFile.toString();
-
         Configuration conf = new Configuration();
+	FileSystem fs = FileSystem.get(conf);
+	Path inFile = new Path("/home/ubuntu/Workspace/hadoop-1.1.0/hadoop-data/" + inputFile.toString());
+	Path outFile = new Path("/home/ubuntu/Workspace/hadoop-1.1.0/hadoop-data/out.log");
+
+	FSDataInputStream in = fs.open(inFile);
+	FSDataOutputStream out = fs.create(outFile);
+	byte buffer[] = new byte[256];
+
+	try {
+		int bytesRead = 0;
+		while ((bytesRead = in.read(buffer)) > 0) {
+			out.write(buffer, 0, bytesRead);
+		}
+	}
+	catch(IOException e) {
+		System.out.println(e);
+	}	
+	finally {
+		in.close();
+		out.close();
+	}
+
+/*
         Job job = new Job(conf, "socialNetwork");
         job.setJarByClass(TrevorTasks.class);
         job.setMapperClass(Map.class);
         job.setReducerClass(Reduce.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
-
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
 
         job.setInputFormatClass(KeyValueTextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        FileInputFormat.addInputPath(job, new Path(uri));
+        FileInputFormat.addInputPath(job, new Path(inputFile.toString()));
         FileOutputFormat.setOutputPath(job, new Path("."));
-      /*
-        FileSystem fs = FileSystem.get(URI.create(uri), conf);
-        InputStream in = null;
-        try {
-            in = fs.open(new Path(uri));
-            IOUtils.copyBytes(in, System.out, 4096, false);
-        } finally {
-            IOUtils.closeStream(in);
-        }
-        */
+        
         boolean result = job.waitForCompletion(true);
         System.exit(result ? 0 : 1);
+*/
     }
 
     /**
