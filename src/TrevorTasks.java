@@ -49,7 +49,9 @@ public class TrevorTasks {
         }
     }
 
-    public void doTaskB(File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
+    public void doTaskB(File inputFile) throws Exception {
+        String uri = "/home/ubuntu/Workspace/hadoop-1.1.0/hadoop-data/" + inputFile.toString();
+
         Configuration conf = new Configuration();
         Job job = new Job(conf, "socialNetwork");
         job.setJarByClass(TrevorTasks.class);
@@ -63,8 +65,18 @@ public class TrevorTasks {
 
         job.setInputFormatClass(KeyValueTextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        FileInputFormat.addInputPath(job, new Path(inputFile.toString()));
+        FileInputFormat.addInputPath(job, new Path(uri));
         FileOutputFormat.setOutputPath(job, new Path("."));
+      /*
+        FileSystem fs = FileSystem.get(URI.create(uri), conf);
+        InputStream in = null;
+        try {
+            in = fs.open(new Path(uri));
+            IOUtils.copyBytes(in, System.out, 4096, false);
+        } finally {
+            IOUtils.closeStream(in);
+        }
+        */
         boolean result = job.waitForCompletion(true);
         System.exit(result ? 0 : 1);
     }

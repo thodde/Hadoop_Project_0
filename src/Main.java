@@ -28,7 +28,7 @@ public class Main {
             generate = sc.nextLine();
         }
 
-        // Run the data set generator ** WARNING: This takes at least 10 to 20 minutes to run **
+        // Run the data set generator ** WARNING: This takes between 10 to 30 minutes to run **
         if (generate.equalsIgnoreCase("y") || generate.equalsIgnoreCase("yes") || generate.equals("") || generate.equals(null)) {
             DataSetGenerator dsg = new DataSetGenerator();
             dsg.myPageGenerator();
@@ -41,13 +41,7 @@ public class Main {
         try {
             t1.doTaskB(MY_PAGE_FILE);
         }
-        catch(IOException e) {
-            System.out.println(e);
-        }
-        catch(InterruptedException e) {
-            System.out.println(e);
-        }
-        catch(ClassNotFoundException e) {
+        catch(Exception e) {
             System.out.println(e);
         }
     }
