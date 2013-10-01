@@ -2,3 +2,5 @@
 *.class
 *.iml
 .idea
+output
+*.jar

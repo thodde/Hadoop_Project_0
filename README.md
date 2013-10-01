@@ -16,7 +16,4 @@ TODO:
 		upload to cluster
 	endif
 
-- Add unique hobbies in an enum
-- Move giant switch statements to method (is this possible? worthwhile?) 
-
 - ** All tasks (a - f) **
