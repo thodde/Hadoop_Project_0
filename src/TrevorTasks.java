@@ -65,27 +65,6 @@ public class TrevorTasks {
 	    Path hadoop_data_path = new Path("/home/ubuntu/Workspace/hadoop-1.1.0/hadoop-data/");
         // Set input and output files
 	    Path inFile = new Path(hadoop_data_path + "/" + inputFile.toString());
-	    Path outFile = new Path(hadoop_data_path + "/out.log");
-
-	    FSDataInputStream in = fs.open(inFile);
-	    FSDataOutputStream out = fs.create(outFile, true);
-	    byte buffer[] = new byte[256];
-
-        // This was just a test to prove that I can read
-        // and write files in the Hadoop File System
-	    try {
-		    int bytesRead = 0;
-		    while ((bytesRead = in.read(buffer)) > 0) {
-			    //out.write(buffer, 0, bytesRead);
-		    }
-	    }
-	    catch(IOException e) {
-		    System.out.println(e);
-	    }	
-	    finally {
-		    in.close();
-		    out.close();
-	    }
 
         // Set up the job and provide it with all the classes it
         // needs to know about

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Remove any old output so that Hadoop doesn't complain
+hadoop fs -rmr /home/ubuntu/Workspace/hadoop-1.1.0/hadoop-data/output
+
 # Compile the project with hadoop on the classpath
 javac -classpath ./:/home/ubuntu/Workspace/hadoop-1.1.0/hadoop-core-1.1.0.jar *.java
 
