@@ -80,4 +80,14 @@ public class TrevorTasks {
         boolean result = job.waitForCompletion(true);
         System.exit(result ? 0 : 1);
     }
+
+    /**
+     * Use this method to check if the data files already exist
+     * in the hadoop cluster.
+     *
+     * @return true if the required datasets exist in the cluster
+     */
+    public boolean checkClusterForDataset() {
+        return true;
+    }
 }

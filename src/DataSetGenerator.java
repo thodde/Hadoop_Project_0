@@ -4,6 +4,9 @@
  * Time: 10:14 PM
  */
 import java.util.Random;
+import java.util.List;
+import java.util.Collections;
+import java.util.Arrays;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,12 +35,35 @@ public class DataSetGenerator {
             this.value = value;
         }
 
-        public String getValue() {
-            return value;
+        // Generate a random description
+        private static final List<Description> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
+        private static final int SIZE = VALUES.size();
+        private static final Random RANDOM = new Random();
+
+        public static String randomDescription()  {
+            return VALUES.get(RANDOM.nextInt(SIZE)).toString();
         }
     }
 
-    // TODO: Struct or enum for unique hobbies
+    // Makes reading hobbies more interesting
+    public enum Hobby {
+        Baseball("Baseball"), Basketball("Basketball"), Programming("Programming"),
+        Music("Music"), Running("Running"), Movies("Movies");
+        private String value;
+
+        Hobby (String value) {
+            this.value = value;
+        }
+
+        // Generate a random hobby
+        private static final List<Hobby> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
+        private static final int SIZE = VALUES.size();
+        private static final Random RANDOM = new Random();
+
+        public static String randomHobby()  {
+            return VALUES.get(RANDOM.nextInt(SIZE)).toString();
+        }
+    }
 
     // A better way to store Strings for Nationalities later on
     public enum Nationality {
@@ -49,11 +75,34 @@ public class DataSetGenerator {
             this.value = value;
         }
 
-        public String getValue() {
-            return value;
+        // Generate a random nationality
+        private static final List<Nationality> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
+        private static final int SIZE = VALUES.size();
+        private static final Random RANDOM = new Random();
+
+        public static String randomNationality()  {
+            return VALUES.get(RANDOM.nextInt(SIZE)).toString();
+        }
+
+        // Assign a particular country code based on the position of the nationality in the array
+        public static int getCountryCode(String strNationality) {
+            int index = 0;
+
+            for(Nationality n : VALUES) {
+                if (n.toString().equals(strNationality)) {
+                    return index;
+                }
+                else {
+                    index++;
+                }
+            }
+            return index;
         }
     }
 
+    /**
+     * Generate the my_page.csv file
+     */
     public void myPageGenerator() {
         int currentID;
         String currentName;
@@ -61,9 +110,7 @@ public class DataSetGenerator {
         int currentCountryCode;
         String currentHobby;
 
-        Nationality n;
         Random r = new Random();
-        int randomInt;
         File f = new File(MY_PAGE_FILE);
 
         // Remove the MyPage file if it already exists
@@ -78,41 +125,14 @@ public class DataSetGenerator {
         for(int i = 1; i <= MY_PAGE_RECORDS; i++) {
             currentID = i;
             currentName = generateRandomString(r.nextInt(10) + 10);
-            currentHobby = generateRandomString(r.nextInt(10) + 10);
 
-            //TODO: Stick giant case statements in a method to shorten these methods...
+            // Generate random nationality using the enum above
+            currentNationality = Nationality.randomNationality();
 
-            // Generate random descriptions using the enum above
-            currentCountryCode = r.nextInt(8) + 1;
-            switch (currentCountryCode) {
-                case 1:
-                    currentNationality = Nationality.German.getValue();
-                    break;
-                case 2:
-                    currentNationality = Nationality.French.getValue();
-                    break;
-                case 3:
-                    currentNationality = Nationality.Chinese.toString();
-                    break;
-                case 4:
-                    currentNationality = Nationality.American.toString();
-                    break;
-                case 5:
-                    currentNationality = Nationality.Indian.toString();
-                    break;
-                case 6:
-                    currentNationality = Nationality.Italian.toString();
-                    break;
-                case 7:
-                    currentNationality = Nationality.English.toString();
-                    break;
-                case 8:
-                    currentNationality = Nationality.Japanese.toString();
-                    break;
-                default:
-                    currentNationality = Nationality.German.toString();
-                    break;
-            }
+            // Generate random hobby using the enum above
+            currentHobby = Hobby.randomHobby();
+
+            currentCountryCode = Nationality.getCountryCode(currentNationality);
 
             try {
                 // Append the new data to the file
@@ -128,6 +148,9 @@ public class DataSetGenerator {
         }
     }
 
+    /**
+     * Generate the friends.csv file
+     */
     public void friendsGenerator() {
         int currentFriendRel;
         int currentPersonID;
@@ -135,9 +158,7 @@ public class DataSetGenerator {
         int currentDateOfFriendship;
         String currentDesc = "";
 
-        Description d;
         Random r = new Random();
-        int randomInt;
         File f = new File(FRIEND_FILE);
 
         if(f.exists()) {
@@ -155,24 +176,7 @@ public class DataSetGenerator {
             currentDateOfFriendship = r.nextInt(1000000) + 1;
 
             // Generate random descriptions using the enum above
-            randomInt = r.nextInt(5) + 1;
-            switch (randomInt) {
-                case 1:
-                    currentDesc = Description.High_School_Friends.getValue();
-                    break;
-                case 2:
-                    currentDesc = Description.College_Friends.getValue();
-                    break;
-                case 3:
-                    currentDesc = Description.Unknown.toString();
-                    break;
-                case 4:
-                    currentDesc = Description.Family.toString();
-                    break;
-                case 5:
-                    currentDesc = Description.Colleague.toString();
-                    break;
-            }
+            currentDesc = Description.randomDescription();
 
             try {
                 // Append the new data to the data set
@@ -188,6 +192,9 @@ public class DataSetGenerator {
         }
     }
 
+    /**
+     * Generate the accesslog.csv file
+     */
     public void accessLogGenerator() {
         int currentAccessID;
         int currentByWho;
@@ -198,14 +205,16 @@ public class DataSetGenerator {
         Random r = new Random();
         File f = new File(ACCESS_LOG_FILE);
 
+        // Check if the AccessLog file already exists, if so, delete it
         if(f.exists()) {
             System.out.println("AccessLog dataset already exists! Deleting...");
             f.delete();
         }
 
-        System.out.println("Generating Access Log dataset...");
+        System.out.println("Generating AccessLog dataset...");
 
         for (int i = 1; i <= ACCESS_RECORDS; i++) {
+            //generate a bunch of random data for the access log
             currentAccessID = i;
             currentByWho = r.nextInt(50000) + 1;
             currentWhatPage = r.nextInt(50000) + 1;

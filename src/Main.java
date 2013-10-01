@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -36,6 +35,7 @@ public class Main {
             dsg.accessLogGenerator();
         }
 
+        /*
         TrevorTasks t1 = new TrevorTasks();
 
         try {
@@ -44,5 +44,6 @@ public class Main {
         catch(Exception e) {
             System.out.println(e);
         }
+        */
     }
 }
