@@ -23,6 +23,9 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class TrevorTasks {
+    /**
+     * This is the mapper class for organizing data from the data sets
+     */
     public static class Map extends Mapper<Text, Text, Text, Text> {
         private Text word = new Text();
 
@@ -35,6 +38,9 @@ public class TrevorTasks {
         }
     }
 
+    /**
+     * This is the reducer class to produce meaningful output from the data
+     */
     public static class Reduce extends Reducer<Text, Text, Text, Text> {
          private Text result = new Text();
 
@@ -52,47 +58,54 @@ public class TrevorTasks {
     }
 
     public void doTaskB(File inputFile) throws Exception {
+        // Set up the configuration for the Hadoop job
         Configuration conf = new Configuration();
-	FileSystem fs = FileSystem.get(conf);
-	Path inFile = new Path("/home/ubuntu/Workspace/hadoop-1.1.0/hadoop-data/" + inputFile.toString());
-	Path outFile = new Path("/home/ubuntu/Workspace/hadoop-1.1.0/hadoop-data/out.log");
+	    FileSystem fs = FileSystem.get(conf);
+        // This path is used frequently, so make it a variable
+	    Path hadoop_data_path = new Path("/home/ubuntu/Workspace/hadoop-1.1.0/hadoop-data/");
+        // Set input and output files
+	    Path inFile = new Path(hadoop_data_path + "/" + inputFile.toString());
+	    Path outFile = new Path(hadoop_data_path + "/out.log");
 
-	FSDataInputStream in = fs.open(inFile);
-	FSDataOutputStream out = fs.create(outFile);
-	byte buffer[] = new byte[256];
+	    FSDataInputStream in = fs.open(inFile);
+	    FSDataOutputStream out = fs.create(outFile, true);
+	    byte buffer[] = new byte[256];
 
-	try {
-		int bytesRead = 0;
-		while ((bytesRead = in.read(buffer)) > 0) {
-			out.write(buffer, 0, bytesRead);
-		}
-	}
-	catch(IOException e) {
-		System.out.println(e);
-	}	
-	finally {
-		in.close();
-		out.close();
-	}
+        // This was just a test to prove that I can read
+        // and write files in the Hadoop File System
+	    try {
+		    int bytesRead = 0;
+		    while ((bytesRead = in.read(buffer)) > 0) {
+			    //out.write(buffer, 0, bytesRead);
+		    }
+	    }
+	    catch(IOException e) {
+		    System.out.println(e);
+	    }	
+	    finally {
+		    in.close();
+		    out.close();
+	    }
 
-/*
+        // Set up the job and provide it with all the classes it
+        // needs to know about
         Job job = new Job(conf, "socialNetwork");
-        job.setJarByClass(TrevorTasks.class);
+        job.setJarByClass(Main.class);
         job.setMapperClass(Map.class);
         job.setReducerClass(Reduce.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(IntWritable.class);
+        job.setOutputValueClass(Text.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
 
         job.setInputFormatClass(KeyValueTextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        FileInputFormat.addInputPath(job, new Path(inputFile.toString()));
-        FileOutputFormat.setOutputPath(job, new Path("."));
+        FileInputFormat.addInputPath(job, inFile);
+        FileOutputFormat.setOutputPath(job, new Path(hadoop_data_path + "/output"));
         
+        // Run the job and wait for results
         boolean result = job.waitForCompletion(true);
         System.exit(result ? 0 : 1);
-*/
     }
 
     /**
@@ -102,6 +115,7 @@ public class TrevorTasks {
      * @return true if the required datasets exist in the cluster
      */
     public boolean checkClusterForDataset() {
+        //might not need this method...
         return true;
     }
 }
