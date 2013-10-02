@@ -79,7 +79,7 @@ public class Task4 {
     }
 
     public static void main(String[] args) throws Exception {
-        JobConf conf = new JobConf(task4.class);
+        JobConf conf = new JobConf(Task4.class);
         conf.setJobName("Task 4: happiness factor");
 
         conf.setOutputKeyClass(Text.class);
