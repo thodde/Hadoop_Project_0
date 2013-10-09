@@ -4,7 +4,6 @@ import java.util.Scanner;
 /**
  * User: trevor hodde
  * Date: 9/25/13
- * Time: 11:00 PM
  */
 public class Main {
     public static void main (String[] args) {
@@ -33,15 +32,6 @@ public class Main {
             dsg.myPageGenerator();
             dsg.friendsGenerator();
             dsg.accessLogGenerator();
-        }
-
-        TrevorTasks t1 = new TrevorTasks();
-
-        try {
-            t1.doTaskB(MY_PAGE_FILE);
-        }
-        catch(Exception e) {
-            System.out.println(e);
         }
     }
 }
