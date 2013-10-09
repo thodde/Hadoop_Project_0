@@ -4,3 +4,4 @@
 .idea
 output
 *.jar
+.DS_Store

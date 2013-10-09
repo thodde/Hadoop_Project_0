@@ -1,12 +1,18 @@
+package DataSetGenerator;
 /**
  * User: trevor hodde
  * Date: 9/25/13
  * Time: 10:14 PM
+ * 
+ * editor: Yanqing Zhou
+ * Date: 10/5/2013
+ * Time: 4:14 PM
+ * 
+ * 01 decrease size(change back later, l:30)
+ * 02 let AccessLog use variable 
+ * 03 reset the AccessLog's TypeOfAccess String to an enum
  */
 import java.util.Random;
-import java.util.List;
-import java.util.Collections;
-import java.util.Arrays;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,94 +27,28 @@ public class DataSetGenerator {
     final private String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
     // Max number of records to store in the data sets
-    final private int MY_PAGE_RECORDS = 50000;
-    final private int FRIENDS_RECORDS = 5000000;
-    final private int ACCESS_RECORDS = 10000000;
+    final private int MY_PAGE_RECORDS = 50000;//50000
+    final private int FRIENDS_RECORDS = 5000000;//5000000
+    final private int ACCESS_RECORDS = 10000000;//10000000
 
-    // Just a more interesting way to store Strings for descriptions later on
-    public enum Description {
-        High_School_Friends("High School Friends"), College_Friends("College Friends"),
-        Unknown("Unknown"), Family("Family"), Colleague("Colleague");
-        private String value;
-
-        Description (String value) {
-            this.value = value;
-        }
-
-        // Generate a random description
-        private static final List<Description> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
-        private static final int SIZE = VALUES.size();
-        private static final Random RANDOM = new Random();
-
-        public static String randomDescription()  {
-            return VALUES.get(RANDOM.nextInt(SIZE)).toString();
-        }
-    }
-
-    // Makes reading hobbies more interesting
-    public enum Hobby {
-        Baseball("Baseball"), Basketball("Basketball"), Programming("Programming"),
-        Music("Music"), Running("Running"), Movies("Movies");
-        private String value;
-
-        Hobby (String value) {
-            this.value = value;
-        }
-
-        // Generate a random hobby
-        private static final List<Hobby> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
-        private static final int SIZE = VALUES.size();
-        private static final Random RANDOM = new Random();
-
-        public static String randomHobby()  {
-            return VALUES.get(RANDOM.nextInt(SIZE)).toString();
-        }
-    }
-
-    // A better way to store Strings for Nationalities later on
-    public enum Nationality {
-        German("German"), French("French"), Chinese("Chinese"), American("American"), Indian("Indian"),
-        Italian("Italian"), English("English"), Japanese("Japanese");
-        private String value;
-
-        Nationality (String value) {
-            this.value = value;
-        }
-
-        // Generate a random nationality
-        private static final List<Nationality> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
-        private static final int SIZE = VALUES.size();
-        private static final Random RANDOM = new Random();
-
-        public static String randomNationality()  {
-            return VALUES.get(RANDOM.nextInt(SIZE)).toString();
-        }
-
-        // Assign a particular country code based on the position of the nationality in the array
-        public static int getCountryCode(String strNationality) {
-            int index = 0;
-
-            for(Nationality n : VALUES) {
-                if (n.toString().equals(strNationality)) {
-                    return index;
-                }
-                else {
-                    index++;
-                }
-            }
-            return index;
-        }
-    }
-
+    //just use the String array to save time.
+    // Hobbies
+    final private String[] Hobby = {"Baseball","Basketball","Programming","Music","Running","Movies"};
+    // Nationalities 
+    final private String[] Nationality = {"German", "French","Chinese","American","Indian","Italian","English","Japanese"};
+    // Friendship descriptions
+    final private String[] FriendshipDescription = {"High School Friends","College Friends","Unknown","Family","Colleague"};
+    // Type Of Access
+    final private String[] TypeOfAccess = {"Just viewed", "Left a note", "Added a friendship"};
     /**
      * Generate the my_page.csv file
      */
     public void myPageGenerator() {
-        int currentID;
-        String currentName;
-        String currentNationality;
-        int currentCountryCode;
-        String currentHobby;
+        int currentID;// range: 1 to ACCESS_RECORDS
+        String currentName;// range: 10 to 20 random char[].toString
+        String currentNationality;// Nationality[currentCountryCode]
+        int currentCountryCode;// range: 0 to Nationality.length
+        String currentHobby; // Hobby[random]
 
         Random r = new Random();
         File f = new File(MY_PAGE_FILE);
@@ -124,15 +64,14 @@ public class DataSetGenerator {
         // Generate random data to store in the data set
         for(int i = 1; i <= MY_PAGE_RECORDS; i++) {
             currentID = i;
-            currentName = generateRandomString(r.nextInt(10) + 10);
-
-            // Generate random nationality using the enum above
-            currentNationality = Nationality.randomNationality();
-
-            // Generate random hobby using the enum above
-            currentHobby = Hobby.randomHobby();
-
-            currentCountryCode = Nationality.getCountryCode(currentNationality);
+            // Generate name
+            currentName = generateRandomString(r.nextInt(10) + 10);//nextInt: range = [0,int)
+            // Generate nationality code
+            currentCountryCode = r.nextInt(Nationality.length);
+            // Use nationality code to get nationality 
+            currentNationality = Nationality[currentCountryCode];
+            // Generate random hobby
+            currentHobby = Hobby[r.nextInt(Hobby.length)];
 
             try {
                 // Append the new data to the file
@@ -152,11 +91,12 @@ public class DataSetGenerator {
      * Generate the friends.csv file
      */
     public void friendsGenerator() {
-        int currentFriendRel;
-        int currentPersonID;
-        int currentFriendID;
-        int currentDateOfFriendship;
-        String currentDesc = "";
+        int currentFriendRel;// range: 1 to FRIENDS_RECORDS
+        int currentPersonID;// range: 1 to MY_PAGE_RECORDS
+        int currentFriendID;// range: 1 to MY_PAGE_RECORDS
+        int currentDateOfFriendship;// range: 1 to 1,000,000 ; indicate when friendship starts
+        final int DateOfFriendshipStartRange = 1000000; 
+        String currentDesc = "";// FriendshipDescription[random]
 
         Random r = new Random();
         File f = new File(FRIEND_FILE);
@@ -171,12 +111,11 @@ public class DataSetGenerator {
         // Fill the data set with random data
         for(int i = 1; i <= FRIENDS_RECORDS; i++) {
             currentFriendRel = i;
-            currentPersonID = r.nextInt(MY_PAGE_RECORDS) + 1;
+            currentPersonID = r.nextInt(MY_PAGE_RECORDS) + 1; 
             currentFriendID = r.nextInt(MY_PAGE_RECORDS) + 1;
-            currentDateOfFriendship = r.nextInt(1000000) + 1;
-
-            // Generate random descriptions using the enum above
-            currentDesc = Description.randomDescription();
+            currentDateOfFriendship = r.nextInt(DateOfFriendshipStartRange) + 1;
+            // Generate Friendship descriptions
+            currentDesc = FriendshipDescription[r.nextInt(FriendshipDescription.length)];
 
             try {
                 // Append the new data to the data set
@@ -196,13 +135,15 @@ public class DataSetGenerator {
      * Generate the accesslog.csv file
      */
     public void accessLogGenerator() {
-        int currentAccessID;
-        int currentByWho;
-        int currentWhatPage;
-        String currentType;
-        int currentAccessTime;
-
-        Random r = new Random();
+    	final int AccessTimeLimit = 1000000;
+    	
+        int currentAccessID;// range: 1 to ACCESS_RECORDS
+        int currentByWho;// range: 1 to MY_PAGE_RECORDS
+        int currentWhatPage;//range: 1 to MY_PAGE_RECORDS
+        String currentTypeOfAccess;// {}
+        int currentAccessTime;//range:1 to 1,000,000; the length of this access period, 1 means second
+        
+        Random r = new Random();//Math.random() simpler to use
         File f = new File(ACCESS_LOG_FILE);
 
         // Check if the AccessLog file already exists, if so, delete it
@@ -216,17 +157,17 @@ public class DataSetGenerator {
         for (int i = 1; i <= ACCESS_RECORDS; i++) {
             //generate a bunch of random data for the access log
             currentAccessID = i;
-            currentByWho = r.nextInt(50000) + 1;
-            currentWhatPage = r.nextInt(50000) + 1;
-            currentType = generateRandomString(r.nextInt(50 - 20) + 20 + 1);
-            currentAccessTime = r.nextInt(1000000);
+            currentByWho = r.nextInt(MY_PAGE_RECORDS) + 1;
+            currentWhatPage = r.nextInt(MY_PAGE_RECORDS) + 1;
+            currentTypeOfAccess = TypeOfAccess[r.nextInt(TypeOfAccess.length)];
+            currentAccessTime = r.nextInt(AccessTimeLimit)+1;
 
             try {
                 // Append the new data to the data set
                 PrintWriter out = new PrintWriter(new FileWriter(ACCESS_LOG_FILE, true));
                 // Write out a comma separated string to the file
                 out.println(currentAccessID + "," + currentByWho + "," + currentWhatPage + "," +
-                        currentType + "," + currentAccessTime);
+                		currentTypeOfAccess + "," + currentAccessTime);
                 out.close();
             }
             catch(IOException e) {
@@ -242,25 +183,24 @@ public class DataSetGenerator {
      * @return a random string of characters
      */
     private String generateRandomString (int randomStringLength) {
-        StringBuffer randStr = new StringBuffer();
-
+        char[] randStr = new char[randomStringLength];
         for(int i = 0; i < randomStringLength; i++) {
-            int number = getRandomNumber();
+            int number = getRandomNumberForALPHABET();
             char ch = ALPHABET.charAt(number);
-            randStr.append(ch);
+            randStr[i] = ch;
         }
-        return randStr.toString();
+        return String.valueOf(randStr);
     }
 
     /**
      * This method generates random numbers
      * @return int
      */
-    private int getRandomNumber() {
+    private int getRandomNumberForALPHABET() {
         int randomInt = 0;
         Random randomGenerator = new Random();
         randomInt = randomGenerator.nextInt(ALPHABET.length());
-        if (randomInt - 1 == -1) {
+        if ((randomInt - 1) == -1) {
             return randomInt;
         }
         else {
